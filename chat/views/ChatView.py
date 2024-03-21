@@ -7,6 +7,17 @@ from ..models import Chat
 from ..serializer.ChatSerializer import ChatSerializer
 
 class CreateChatViewSet(viewsets.ViewSet):
+    '''
+    POST
+    Creates a new chat
+    Fields:
+         'created_by', 'recipient', 'topic',
+
+        created_by -> user_id
+        recipient -> user_id
+        topic -> string
+
+    '''
     permission_classes = [permissions.IsAuthenticated]
     def create(self, request):
         serializer = ChatSerializer(data=request.data)
@@ -17,6 +28,11 @@ class CreateChatViewSet(viewsets.ViewSet):
 
 @action(detail=True, methods=['get'])
 class ChatList(viewsets.ViewSet):
+    '''
+    GET
+        Return all list chat for loged-in user
+
+    '''
 
     permission_classes = [permissions.IsAuthenticated]
     def list(self, request):

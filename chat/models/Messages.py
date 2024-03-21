@@ -34,8 +34,19 @@ class Messages(models.Model):
     def get_messages(chat, user_id, offset, limit):
         messages = Messages.objects.filter(chat=chat).order_by('-timestamp')
 
+        try:
+            limit = int(limit)
+        except (TypeError, ValueError):
+            limit = 0
+
         if limit == 0:
             limit = 50
+
+        try:
+            offset = int(offset)
+        except (TypeError, ValueError):
+            offset = 0
+
 
         paginator = Paginator(messages, limit)
 

@@ -33,7 +33,6 @@ class Chat(models.Model):
 
         from ..models.Messages import Messages
         unread_messages = Messages.get_unread_messages(user_id)
-        print(unread_messages)
         for item in chats:
             chat_id = item['id']
             item['unread'] = 0
