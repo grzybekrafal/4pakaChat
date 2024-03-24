@@ -32,12 +32,15 @@ class ChatList(viewsets.ViewSet):
     GET
         Return all list chat for loged-in user
 
+        seller_id - is not necessary when is added then list of topic/chat is only loggin user with this user
+
     '''
 
     permission_classes = [permissions.IsAuthenticated]
     def list(self, request):
         if request.method == 'GET':
-            unread_counts = Chat.get_unread_message_counts(request.user.id)
+            seller_id = request.GET.get('seller_id', 0)
+            unread_counts = Chat.get_unread_message_counts(request.user.id, seller_id)
             response_data = {
                 'chats': unread_counts,
                 'user_id': request.user.id,

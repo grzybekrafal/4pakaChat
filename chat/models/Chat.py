@@ -25,11 +25,17 @@ class Chat(models.Model):
         super().save(*args, **kwargs)
 
     @staticmethod
-    def get_unread_message_counts(user_id):
+    def get_unread_message_counts(user_id, seller_id):
 
-        chats = list(Chat.objects.filter(Q(created_by_id=user_id) | Q(recipient_id=user_id))
-                 .values('id', 'topic', 'route_id', 'created_by__id',
-                         'created_by__username', 'recipient__id', 'recipient__username', 'last_message_at'))
+        if seller_id == 0:
+            chats = list(Chat.objects.filter(Q(created_by_id=user_id) | Q(recipient_id=user_id))
+                         .values('id', 'topic', 'route_id', 'created_by__id',
+                                 'created_by__username', 'recipient__id', 'recipient__username', 'last_message_at'))
+        else:
+            chats = list(Chat.objects.filter(Q(created_by_id=user_id) | Q(recipient_id=user_id))
+                         .filter(Q(created_by_id=seller_id) | Q(recipient_id=seller_id))
+                         .values('id', 'topic', 'route_id', 'created_by__id',
+                                 'created_by__username', 'recipient__id', 'recipient__username', 'last_message_at'))
 
         from ..models.Messages import Messages
         unread_messages = Messages.get_unread_messages(user_id)
